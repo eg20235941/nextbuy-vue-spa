@@ -13,18 +13,12 @@
     </div>
 
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <div 
-        v-for="product in products" 
-        :key="product.id"
-        class="bg-white p-4 rounded-lg shadow"
-      >
-        <h2 class="font-semibold text-lg">
-          {{ product.title }}
-        </h2>
-        <p class="text-gray-600">
-          ${{ product.price }}
-        </p>
-      </div>
+      <ProductCard
+  v-for="product in products"
+  :key="product.id"
+  :product="product"
+/>
+
     </div>
   </div>
 </template>
@@ -33,6 +27,8 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import type { Product, ProductsResponse } from './types/Product'
+import ProductCard from './components/ProductCard.vue'
+
 
 const products = ref<Product[]>([])
 const isLoading = ref<boolean>(false)
