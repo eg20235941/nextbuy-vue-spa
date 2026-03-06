@@ -11,7 +11,8 @@
     <div v-else-if="error" class="text-center text-red-500">
       {{ error }}
     </div>
-
+    
+    
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <input
   v-model="searchQuery"
@@ -19,6 +20,28 @@
   placeholder="Search products..."
   class="border p-2 mb-4 w-full rounded"
 />
+<div class="flex gap-2 mb-4 flex-wrap">
+  <button @click="selectedCategory = 'all'" class="px-3 py-1 bg-gray-200 rounded">
+    All
+  </button>
+
+  <button @click="selectedCategory = 'electronics'" class="px-3 py-1 bg-gray-200 rounded">
+    Electronics
+  </button>
+
+  <button @click="selectedCategory = 'jewelery'" class="px-3 py-1 bg-gray-200 rounded">
+    Jewelery
+  </button>
+
+ <button @click="selectedCategory = 'men\'s clothing'" class="px-3 py-1 bg-gray-200 rounded">
+  Men's
+</button>
+
+<button @click="selectedCategory = 'women\'s clothing'" class="px-3 py-1 bg-gray-200 rounded">
+  Women's
+</button>
+
+</div>
 
       
       <ProductCard
@@ -42,14 +65,25 @@ const products = ref<Product[]>([])
 const isLoading = ref<boolean>(false)
 const error = ref<string | null>(null)
 const searchQuery = ref('')
+const selectedCategory = ref('all')
+
 
 
 
 const filteredProducts = computed(() => {
-  return products.value.filter(product =>
-    product.title.toLowerCase().includes(searchQuery.value.toLowerCase())
-  )
+  return products.value.filter(product => {
+    const matchesSearch = product.title
+      .toLowerCase()
+      .includes(searchQuery.value.toLowerCase())
+
+    const matchesCategory =
+      selectedCategory.value === 'all' ||
+      product.category === selectedCategory.value
+
+    return matchesSearch && matchesCategory
+  })
 })
+
 
 onMounted(async () => {
   try {
