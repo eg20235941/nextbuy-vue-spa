@@ -13,8 +13,16 @@
     </div>
 
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <input
+  v-model="searchQuery"
+  type="text"
+  placeholder="Search products..."
+  class="border p-2 mb-4 w-full rounded"
+/>
+
+      
       <ProductCard
-  v-for="product in products"
+  v-for="product in filteredProducts"
   :key="product.id"
   :product="product"
 />
@@ -25,7 +33,7 @@
 
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import type { Product, ProductsResponse } from './types/Product'
 import ProductCard from './components/ProductCard.vue'
 
@@ -33,6 +41,15 @@ import ProductCard from './components/ProductCard.vue'
 const products = ref<Product[]>([])
 const isLoading = ref<boolean>(false)
 const error = ref<string | null>(null)
+const searchQuery = ref('')
+
+
+
+const filteredProducts = computed(() => {
+  return products.value.filter(product =>
+    product.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
+})
 
 onMounted(async () => {
   try {
@@ -48,6 +65,9 @@ onMounted(async () => {
     isLoading.value = false
   }
 })
+
+
+
 </script>
 
 
