@@ -9,7 +9,13 @@ export interface Product {
   brand: string
   category: string
   thumbnail: string
-  images: string[]
+  image: string
+
+}
+
+
+export interface CartItem extends Product {
+  quantity: number
 }
 
 export interface ProductsResponse {
