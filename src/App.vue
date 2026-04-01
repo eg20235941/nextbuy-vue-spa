@@ -36,6 +36,10 @@
         class="border p-2 mb-4 w-full rounded"
       />
 
+      <p class="text-sm text-gray-600 mb-4">
+  Showing {{ filteredProducts.length }} products
+</p>
+
       <!-- Category Buttons -->
       <div class="flex gap-2 mb-4 flex-wrap">
         <button @click="selectedCategory = 'all'" class="px-3 py-1 bg-gray-200 rounded">All</button>
@@ -54,14 +58,19 @@
   :cart="cart"
   @add-to-cart="addToCart"
 />
-<div v-if="products.length < 100" class="text-center mt-6">
+<div class="text-center mt-6">
   <button
-  @click="loadMore"
-  :disabled="isLoadingMore"
-  class="bg-green-500 text-white px-4 py-2 rounded disabled:opacity-50"
->
+    v-if="products.length < 100"
+    @click="loadMore"
+    :disabled="isLoadingMore"
+    class="bg-green-500 text-white px-4 py-2 rounded disabled:opacity-50"
+  >
     {{ isLoadingMore ? 'Loading...' : 'Load More' }}
   </button>
+
+  <p v-else class="text-gray-500 font-medium">
+    No more products to load
+  </p>
 </div>
 
       </div>
