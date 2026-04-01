@@ -59,7 +59,7 @@
     @click="loadMore"
     class="bg-green-500 text-white px-4 py-2 rounded"
   >
-    Load More
+    {{ isLoadingMore ? 'Loading...' : 'Load More' }}
   </button>
 </div>
 
@@ -215,6 +215,7 @@ const searchQuery = ref('')
 const selectedCategory = ref('all')
 const selectedProduct = ref<Product | null>(null)
 const limit = ref(6)   // how many products to show
+const isLoadingMore = ref(false)
 
 
 
@@ -237,6 +238,7 @@ const filteredProducts = computed(() => {
 
 async function loadMore() {
   try {
+    isLoadingMore.value = true
     limit.value += 6
 
     const response = await fetch(`https://dummyjson.com/products?limit=${limit.value}`)
@@ -245,6 +247,8 @@ async function loadMore() {
     products.value = data.products
   } catch (err) {
     error.value = 'Failed to load more products'
+  } finally {
+    isLoadingMore.value = false
   }
 }
 
