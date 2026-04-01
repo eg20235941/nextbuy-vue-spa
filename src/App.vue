@@ -56,9 +56,10 @@
 />
 <div v-if="products.length < 100" class="text-center mt-6">
   <button
-    @click="loadMore"
-    class="bg-green-500 text-white px-4 py-2 rounded"
-  >
+  @click="loadMore"
+  :disabled="isLoadingMore"
+  class="bg-green-500 text-white px-4 py-2 rounded disabled:opacity-50"
+>
     {{ isLoadingMore ? 'Loading...' : 'Load More' }}
   </button>
 </div>
