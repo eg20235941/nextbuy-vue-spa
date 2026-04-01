@@ -54,7 +54,14 @@
   :cart="cart"
   @add-to-cart="addToCart"
 />
-
+<div v-if="products.length < 100" class="text-center mt-6">
+  <button
+    @click="loadMore"
+    class="bg-green-500 text-white px-4 py-2 rounded"
+  >
+    Load More
+  </button>
+</div>
 
       </div>
 
@@ -207,6 +214,7 @@ const error = ref<string | null>(null)
 const searchQuery = ref('')
 const selectedCategory = ref('all')
 const selectedProduct = ref<Product | null>(null)
+const limit = ref(6)   // how many products to show
 
 
 
@@ -227,12 +235,24 @@ const filteredProducts = computed(() => {
   })
 })
 
+async function loadMore() {
+  try {
+    limit.value += 6
+
+    const response = await fetch(`https://dummyjson.com/products?limit=${limit.value}`)
+    const data: ProductsResponse = await response.json()
+
+    products.value = data.products
+  } catch (err) {
+    error.value = 'Failed to load more products'
+  }
+}
 
 onMounted(async () => {
   try {
     isLoading.value = true
 
-    const response = await fetch('https://dummyjson.com/products')
+    const response = await fetch(`https://dummyjson.com/products?limit=${limit.value}`)
     const data: ProductsResponse = await response.json()
 
     products.value = data.products

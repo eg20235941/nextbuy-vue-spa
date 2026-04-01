@@ -32,6 +32,22 @@ const emit = defineEmits(['add-to-cart', 'view-product'])
       ${{ props.product.price }}
     </p>
 
+    <div class="flex items-center mb-2">
+
+  <span class="text-yellow-400 text-lg">
+    {{ '★'.repeat(Math.round(product.rating)) }}
+  </span>
+
+  <span class="text-gray-400 text-lg">
+    {{ '☆'.repeat(5 - Math.round(product.rating)) }}
+  </span>
+
+  <span class="text-sm text-gray-500 ml-2">
+    ({{ product.rating }})
+  </span>
+
+</div>
+
     <button
       @click.stop="emit('add-to-cart', props.product)"
       :disabled="props.cart.some(p => p.id === props.product.id)"
