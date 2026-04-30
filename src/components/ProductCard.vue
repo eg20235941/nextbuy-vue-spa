@@ -12,9 +12,9 @@ const emit = defineEmits<{
 
 <template>
   <article
-    class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
-  >
-    <div class="mb-4 overflow-hidden rounded-xl bg-slate-100">
+  class="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl cursor-pointer"
+>
+    <div class="h-36 w-full object-cover sm:h-44 transition duration-300 group-hover:scale-105">
       <img
         :src="props.product.thumbnail"
         :alt="props.product.title"
@@ -40,7 +40,7 @@ const emit = defineEmits<{
     </div>
 
     <button
-      @click="emit('view-product', props.product)"
+  @click.stop="emit('view-product', props.product)"
       class="inline-flex h-10 items-center justify-center rounded-xl bg-indigo-600 px-4 text-sm font-medium text-white transition hover:bg-indigo-700"
     >
       View Details

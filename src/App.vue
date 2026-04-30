@@ -46,24 +46,26 @@
         </p>
       </section>
 
-      <section class="mb-10 grid gap-4 md:grid-cols-[minmax(0,1fr)_260px]">
-        <input
-          v-model="searchQuery"
-          type="text"
-          placeholder="Search products..."
-          class="h-12 rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none ring-0 transition focus:border-indigo-500"
-        />
+      <section class="mb-10 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+  <div class="flex flex-col gap-4 md:flex-row md:items-center">
+    <input
+      v-model="searchQuery"
+      type="text"
+      placeholder="Search products..."
+      class="h-12 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm outline-none transition focus:border-indigo-500 focus:bg-white"
+    />
 
-        <select
-          v-model="selectedCategory"
-          class="h-12 rounded-xl border border-slate-200 bg-white px-4 text-sm capitalize outline-none transition focus:border-indigo-500"
-        >
-          <option value="all">All Categories</option>
-          <option v-for="category in categories" :key="category" :value="category">
-            {{ category }}
-          </option>
-        </select>
-      </section>
+    <select
+      v-model="selectedCategory"
+      class="h-12 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm capitalize outline-none transition focus:border-indigo-500 focus:bg-white md:w-64"
+    >
+      <option value="all">All Categories</option>
+      <option v-for="category in categories" :key="category" :value="category">
+        {{ category }}
+      </option>
+    </select>
+  </div>
+</section>
 
       <section id="products">
         <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -193,7 +195,7 @@
         @click.self="selectedProduct = null"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-8"
       >
-        <div class="relative w-full max-w-5xl rounded-[20px] bg-white p-6 shadow-2xl sm:p-8">
+        <div class="relative w-full max-w-5xl rounded-[24px] bg-white p-5 shadow-2xl sm:p-8">
           <button
             @click="selectedProduct = null"
             class="absolute right-5 top-4 text-2xl leading-none text-slate-300 transition hover:text-slate-500"
@@ -202,7 +204,7 @@
           </button>
 
           <div class="grid gap-8 md:grid-cols-[340px_minmax(0,1fr)] md:items-start">
-            <div class="overflow-hidden rounded-2xl bg-slate-100">
+            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
               <img
                 :src="selectedProduct.images?.[0] || selectedProduct.thumbnail"
                 :alt="selectedProduct.title"
@@ -235,7 +237,7 @@
               <div class="mt-8 flex flex-wrap gap-3">
                 <button
                   @click="addToCart(selectedProduct)"
-                  class="inline-flex h-11 items-center justify-center rounded-xl bg-indigo-600 px-6 text-sm font-medium text-white transition hover:bg-indigo-700"
+                  class="inline-flex h-11 items-center justify-center rounded-xl bg-indigo-600 px-6 text-sm font-medium text-white shadow-sm transition hover:bg-indigo-700"
                 >
                   Add to Cart
                 </button>
