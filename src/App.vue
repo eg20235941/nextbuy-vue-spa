@@ -1,387 +1,427 @@
 <template>
-  <div class="min-h-screen bg-gray-100 p-6">
+  <div class="min-h-screen bg-slate-50 text-slate-900">
+    <header class="border-b border-slate-200 bg-white">
+      <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <h1 class="text-2xl font-semibold">NextBuy</h1>
 
-    <!-- Header -->
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-3xl font-bold">
-        NextBuy
-      </h1>
+        <div class="flex items-center gap-3">
+          <nav class="hidden items-center gap-6 text-sm font-medium text-slate-700 md:flex">
+            <a href="#" class="transition hover:text-slate-900">Home</a>
+            <a href="#products" class="transition hover:text-slate-900">Products</a>
+            <a href="#footer" class="transition hover:text-slate-900">About</a>
+          </nav>
 
-      <button
-        @click="showCart = !showCart"
-        class="bg-blue-500 text-white px-4 py-2 rounded"
-      >
-        Cart ({{ cart.length }})
-      </button>
-    </div>
+          <button
+            @click="showCart = true"
+            class="hidden rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 md:inline-flex"
+          >
+            Cart ({{ cartCount }})
+          </button>
 
-    <!-- Loading -->
-    <div v-if="isLoading" class="text-center">
-      Loading products...
-    </div>
+          <button
+            @click="showCart = true"
+            class="rounded-xl border border-slate-200 bg-white p-2 text-slate-700 md:hidden"
+            aria-label="Open cart"
+          >
+            🛒
+          </button>
 
-    <!-- Error -->
-    <div v-else-if="error" class="text-center text-red-500">
-      {{ error }}
-    </div>
-
-    <!-- Products -->
-    <div v-else>
-
-      <!-- Search -->
-      <input
-        v-model="searchQuery"
-        type="text"
-        placeholder="Search products..."
-        class="border p-2 mb-4 w-full rounded"
-      />
-
-      <p class="text-sm text-gray-600 mb-4">
-  Showing {{ filteredProducts.length }} products
-</p>
-
-      <!-- Category Buttons -->
-      <div class="flex gap-2 mb-4 flex-wrap">
-
-  <button @click="selectedCategory = 'all'" class="px-3 py-1 bg-gray-200 rounded">
-    All
-  </button>
-
-  <button @click="selectedCategory = 'beauty'" class="px-3 py-1 bg-gray-200 rounded">
-    Engine Parts
-  </button>
-
-  <button @click="selectedCategory = 'fragrances'" class="px-3 py-1 bg-gray-200 rounded">
-    Electrical
-  </button>
-
-  <button @click="selectedCategory = 'furniture'" class="px-3 py-1 bg-gray-200 rounded">
-    Body Parts
-  </button>
-
-  <button @click="selectedCategory = 'groceries'" class="px-3 py-1 bg-gray-200 rounded">
-    Accessories
-  </button>
-
-</div>
-
-      <!-- Product Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-       <ProductCard
-  v-for="product in filteredProducts"
-  :key="product.id"
-  :product="product"
-  :cart="cart"
-  @add-to-cart="addToCart"
-/>
-<div class="text-center mt-6">
-  <button
-    v-if="products.length < 100"
-    @click="loadMore"
-    :disabled="isLoadingMore"
-    class="bg-green-500 text-white px-4 py-2 rounded disabled:opacity-50"
-  >
-    {{ isLoadingMore ? 'Loading...' : 'Load More' }}
-  </button>
-
-  <p v-else class="text-gray-500 font-medium">
-    No more products to load
-  </p>
-</div>
-
+          <button
+            class="rounded-xl border border-slate-200 bg-white p-2 text-slate-700 md:hidden"
+            aria-label="Menu"
+          >
+            ☰
+          </button>
+        </div>
       </div>
+    </header>
 
-    </div>
-
-    <!-- Cart Panel -->
-   <transition name="slide">
-  <div v-if="showCart">
-    <div
-      class="fixed top-0 right-0 w-80 h-full bg-white shadow-lg p-4 overflow-y-auto"
-    >
-
-
-
-      <h2 class="text-xl font-bold mb-4">Your Cart</h2>
-
-      <div v-if="cart.length === 0" class="text-center text-gray-500 mt-10">
-  🛒 Your cart is empty
-</div>
-
-      <div v-for="item in cart" :key="item.id" class="mb-4 border-b pb-2">
-
-        <p class="font-semibold">
-          {{ item.title }}
+    <main class="mx-auto max-w-6xl px-4 py-10 sm:px-6 lg:px-8">
+      <section class="mb-8">
+        <h2 class="mb-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+          Discover Your Next Buy
+        </h2>
+        <p class="max-w-2xl text-sm text-slate-500 sm:text-base">
+          Browse products, search instantly, and explore details in a modern shopping experience.
         </p>
+      </section>
 
-        <div class="flex items-center gap-2 mt-2">
+      <section class="mb-10 grid gap-4 md:grid-cols-[minmax(0,1fr)_260px]">
+        <input
+          v-model="searchQuery"
+          type="text"
+          placeholder="Search products..."
+          class="h-12 rounded-xl border border-slate-200 bg-white px-4 text-sm outline-none ring-0 transition focus:border-indigo-500"
+        />
 
-  <button
-    @click="decreaseQty(item.id)"
-    class="px-2 bg-gray-200 rounded"
-  >
-    -
-  </button>
-
-  <span>{{ item.quantity }}</span>
-
-  <button
-    @click="increaseQty(item.id)"
-    class="px-2 bg-gray-200 rounded"
-  >
-    +
-  </button>
-
-  </div>
-
-
-
-
-        <p class="font-bold">
-  ${{ (item.price * item.quantity).toFixed(2) }}
-</p>
-
-
-        <button
-          @click="removeFromCart(item.id)"
-          class="text-red-500 text-sm"
+        <select
+          v-model="selectedCategory"
+          class="h-12 rounded-xl border border-slate-200 bg-white px-4 text-sm capitalize outline-none transition focus:border-indigo-500"
         >
-          Remove
-        </button>
+          <option value="all">All Categories</option>
+          <option v-for="category in categories" :key="category" :value="category">
+            {{ category }}
+          </option>
+        </select>
+      </section>
 
+      <section id="products">
+        <div class="mb-6 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h3 class="text-2xl font-semibold">
+              {{ resultsHeading }}
+            </h3>
+            <p class="text-sm text-slate-500">
+              {{ resultsSubtext }}
+            </p>
+          </div>
+
+          <button
+            v-if="hasActiveFilter"
+            @click="clearFilters"
+            class="text-sm font-medium text-indigo-600 transition hover:text-indigo-700"
+          >
+            Clear Filters
+          </button>
+        </div>
+
+        <div v-if="isLoading" class="rounded-2xl border border-slate-200 bg-white p-10 text-center text-slate-500 shadow-sm">
+          Loading products...
+        </div>
+
+        <div v-else-if="error" class="rounded-2xl border border-rose-200 bg-rose-50 p-10 text-center text-rose-600">
+          {{ error }}
+        </div>
+
+        <template v-else>
+          <div v-if="visibleProducts.length" class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
+            <ProductCard
+              v-for="product in visibleProducts"
+              :key="product.id"
+              :product="product"
+              @view-product="openProduct"
+            />
+          </div>
+
+          <div v-else class="rounded-2xl border border-slate-200 bg-white p-10 text-center text-slate-500 shadow-sm">
+            No matching products found.
+          </div>
+
+          <div class="mt-8 flex justify-center" v-if="canLoadMore">
+            <button
+              @click="loadMore"
+              class="inline-flex h-11 items-center justify-center rounded-xl bg-indigo-600 px-5 text-sm font-medium text-white transition hover:bg-indigo-700"
+            >
+              Load More
+            </button>
+          </div>
+        </template>
+      </section>
+    </main>
+
+    <footer id="footer" class="border-t border-slate-200 bg-white">
+      <div class="mx-auto max-w-6xl px-4 py-6 text-center text-sm text-slate-500 sm:px-6 lg:px-8">
+        © 2026 NextBuy. All rights reserved.
       </div>
+    </footer>
 
-      <div class="mt-4 font-bold text-lg">
-  Total: ${{ cartTotal.toFixed(2) }}
-</div>
+    <transition name="slide">
+      <aside
+        v-if="showCart"
+        class="fixed inset-y-0 right-0 z-40 w-full max-w-sm border-l border-slate-200 bg-white shadow-2xl"
+      >
+        <div class="flex h-full flex-col">
+          <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+            <h2 class="text-xl font-semibold">Your Cart</h2>
+            <button @click="showCart = false" class="text-2xl leading-none text-slate-400 hover:text-slate-600">×</button>
+          </div>
 
-<button
-  @click="cart = []"
-  class="bg-red-500 text-white px-4 py-2 rounded mt-4 w-full"
->
-  Clear Cart
-</button>
+          <div class="flex-1 overflow-y-auto px-5 py-4">
+            <div v-if="cart.length === 0" class="rounded-2xl border border-dashed border-slate-200 p-8 text-center text-slate-500">
+              🛒 Your cart is empty
+            </div>
 
-</div>
-</div>
-</transition>
+            <div v-else class="space-y-4">
+              <div
+                v-for="item in cart"
+                :key="item.id"
+                class="rounded-2xl border border-slate-200 p-4"
+              >
+                <div class="flex items-start justify-between gap-4">
+                  <div>
+                    <p class="font-semibold">{{ item.title }}</p>
+                    <p class="mt-1 text-sm text-slate-500">${{ item.price }} each</p>
+                  </div>
+                  <button @click="removeFromCart(item.id)" class="text-sm text-rose-500 hover:text-rose-600">
+                    Remove
+                  </button>
+                </div>
 
-<transition name="fade">
-  <div
-    v-if="selectedProduct"
-    @click.self="selectedProduct = null"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center"
-  >
+                <div class="mt-4 flex items-center justify-between">
+                  <div class="flex items-center gap-3 rounded-xl bg-slate-100 px-3 py-2">
+                    <button @click="decreaseQty(item.id)" class="text-base font-medium">-</button>
+                    <span class="text-sm font-medium">{{ item.quantity }}</span>
+                    <button @click="increaseQty(item.id)" class="text-base font-medium">+</button>
+                  </div>
 
-    <div class="bg-white p-6 rounded w-96">
+                  <p class="font-semibold">${{ (item.price * item.quantity).toFixed(2) }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-      <img
-        :src="selectedProduct?.image?.[0] || selectedProduct?.thumbnail"
-        class="w-full h-48 object-cover mb-4"
-      />
+          <div class="border-t border-slate-200 px-5 py-4">
+            <div class="mb-4 flex items-center justify-between text-lg font-semibold">
+              <span>Total</span>
+              <span>${{ cartTotal.toFixed(2) }}</span>
+            </div>
 
-      <h2 class="text-xl font-bold mb-2">
-        {{ selectedProduct?.title }}
-      </h2>
+            <button
+              @click="clearCart"
+              class="inline-flex h-11 w-full items-center justify-center rounded-xl bg-rose-500 text-sm font-medium text-white transition hover:bg-rose-600"
+            >
+              Clear Cart
+            </button>
+          </div>
+        </div>
+      </aside>
+    </transition>
 
-      <p class="text-gray-600 mb-4">
-        {{ selectedProduct?.description }}
-      </p>
+    <transition name="fade">
+      <div
+        v-if="selectedProduct"
+        @click.self="selectedProduct = null"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-8"
+      >
+        <div class="relative w-full max-w-5xl rounded-[20px] bg-white p-6 shadow-2xl sm:p-8">
+          <button
+            @click="selectedProduct = null"
+            class="absolute right-5 top-4 text-2xl leading-none text-slate-300 transition hover:text-slate-500"
+          >
+            ×
+          </button>
 
-      <p class="font-bold mb-4">
-        ${{ selectedProduct?.price }}
-      </p>
+          <div class="grid gap-8 md:grid-cols-[340px_minmax(0,1fr)] md:items-start">
+            <div class="overflow-hidden rounded-2xl bg-slate-100">
+              <img
+                :src="selectedProduct.images?.[0] || selectedProduct.thumbnail"
+                :alt="selectedProduct.title"
+                class="h-72 w-full object-cover md:h-[340px]"
+              />
+            </div>
 
-      <div class="flex justify-between">
+            <div>
+              <h3 class="mb-3 text-3xl font-semibold tracking-tight text-slate-900">
+                {{ selectedProduct.title }}
+              </h3>
 
-        <button
-          @click="addToCart(selectedProduct!)"
-          class="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Add to Cart
-        </button>
+              <span class="inline-flex rounded-xl bg-slate-100 px-3 py-1 text-sm font-medium capitalize text-slate-700">
+                {{ selectedProduct.category }}
+              </span>
 
-        <button
-          @click="selectedProduct = null"
-          class="text-gray-500"
-        >
-          Close
-        </button>
+              <p class="mt-6 text-4xl font-semibold text-slate-900">
+                ${{ selectedProduct.price }}
+              </p>
 
+              <div class="mt-5 flex items-center gap-2 text-base text-slate-500">
+                <span class="text-amber-400">★</span>
+                <span>{{ selectedProduct.rating.toFixed(1) }}</span>
+              </div>
+
+              <p class="mt-6 max-w-xl text-base leading-7 text-slate-500">
+                {{ selectedProduct.description }}
+              </p>
+
+              <div class="mt-8 flex flex-wrap gap-3">
+                <button
+                  @click="addToCart(selectedProduct)"
+                  class="inline-flex h-11 items-center justify-center rounded-xl bg-indigo-600 px-6 text-sm font-medium text-white transition hover:bg-indigo-700"
+                >
+                  Add to Cart
+                </button>
+                <button
+                  @click="selectedProduct = null"
+                  class="inline-flex h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-6 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
+                >
+                  Back
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-
-    </div>
-
-  </div>
-</transition>
-
-
+    </transition>
   </div>
 </template>
 
-
-
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
-import type { Product, ProductsResponse } from './types/Product'
+import { computed, onMounted, ref, watch } from 'vue'
 import ProductCard from './components/ProductCard.vue'
-import type { CartItem } from './types/Product'
-
-
-const cart = ref<CartItem[]>([])
-const showCart = ref(false)
-
-
-
+import type { CartItem, Product, ProductsResponse } from './types/Product'
 
 const products = ref<Product[]>([])
-const isLoading = ref<boolean>(false)
+const cart = ref<CartItem[]>([])
+const isLoading = ref(false)
 const error = ref<string | null>(null)
 const searchQuery = ref('')
 const selectedCategory = ref('all')
 const selectedProduct = ref<Product | null>(null)
-const limit = ref(6)   // how many products to show
-const isLoadingMore = ref(false)
+const showCart = ref(false)
+const displayLimit = ref(8)
 
-
-
-
-
+const categories = computed(() => {
+  return [...new Set(products.value.map((product) => product.category))].sort()
+})
 
 const filteredProducts = computed(() => {
-  return products.value.filter(product => {
-    const matchesSearch = product.title
-      .toLowerCase()
-      .includes(searchQuery.value.toLowerCase())
-
-    const matchesCategory =
-      selectedCategory.value === 'all' ||
-      product.category === selectedCategory.value
-
+  return products.value.filter((product) => {
+    const matchesSearch = product.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+    const matchesCategory = selectedCategory.value === 'all' || product.category === selectedCategory.value
     return matchesSearch && matchesCategory
   })
 })
 
-async function loadMore() {
-  try {
-    isLoadingMore.value = true
-    limit.value += 6
+const visibleProducts = computed(() => {
+  return filteredProducts.value.slice(0, displayLimit.value)
+})
 
-    const response = await fetch(`https://dummyjson.com/products?limit=${limit.value}`)
-    const data: ProductsResponse = await response.json()
+const canLoadMore = computed(() => {
+  return filteredProducts.value.length > displayLimit.value
+})
 
-    products.value = data.products
-  } catch (err) {
-    error.value = 'Failed to load more products'
-  } finally {
-    isLoadingMore.value = false
+const hasActiveFilter = computed(() => {
+  return searchQuery.value.trim() !== '' || selectedCategory.value !== 'all'
+})
+
+const resultsHeading = computed(() => {
+  return hasActiveFilter.value ? 'Search Results' : 'Featured Products'
+})
+
+const resultsSubtext = computed(() => {
+  if (!filteredProducts.value.length) {
+    return 'Try another search or category.'
+  }
+
+  if (hasActiveFilter.value) {
+    return `Showing ${filteredProducts.value.length} matching products`
+  }
+
+  return 'Explore trending items across multiple categories'
+})
+
+const cartTotal = computed(() => {
+  return cart.value.reduce((total, item) => total + item.price * item.quantity, 0)
+})
+
+const cartCount = computed(() => {
+  return cart.value.reduce((total, item) => total + item.quantity, 0)
+})
+
+function openProduct(product: Product) {
+  selectedProduct.value = product
+}
+
+function clearFilters() {
+  searchQuery.value = ''
+  selectedCategory.value = 'all'
+  displayLimit.value = 8
+}
+
+function loadMore() {
+  displayLimit.value += 4
+}
+
+function addToCart(product: Product) {
+  const existingItem = cart.value.find((item) => item.id === product.id)
+
+  if (existingItem) {
+    existingItem.quantity += 1
+  } else {
+    cart.value.push({
+      ...product,
+      quantity: 1,
+    })
+  }
+
+  showCart.value = true
+}
+
+function removeFromCart(id: number) {
+  cart.value = cart.value.filter((item) => item.id !== id)
+}
+
+function increaseQty(id: number) {
+  const item = cart.value.find((cartItem) => cartItem.id === id)
+  if (item) item.quantity += 1
+}
+
+function decreaseQty(id: number) {
+  const item = cart.value.find((cartItem) => cartItem.id === id)
+  if (!item) return
+
+  if (item.quantity > 1) {
+    item.quantity -= 1
+  } else {
+    removeFromCart(id)
   }
 }
+
+function clearCart() {
+  cart.value = []
+}
+
+watch([searchQuery, selectedCategory], () => {
+  displayLimit.value = 8
+})
+
+watch(
+  cart,
+  (newCart) => {
+    localStorage.setItem('cart', JSON.stringify(newCart))
+  },
+  { deep: true },
+)
 
 onMounted(async () => {
   try {
     isLoading.value = true
 
-    const response = await fetch(`https://dummyjson.com/products?limit=${limit.value}`)
+    const response = await fetch('https://dummyjson.com/products?limit=100')
     const data: ProductsResponse = await response.json()
 
     products.value = data.products
-  } catch (err) {
-    error.value = 'Failed to fetch products'
+  } catch {
+    error.value = 'Failed to fetch products.'
   } finally {
     isLoading.value = false
   }
+
   const savedCart = localStorage.getItem('cart')
-
-if (savedCart) {
-  cart.value = JSON.parse(savedCart)
-}
-
-})
-
-function addToCart(product: Product) {
-
-  const existing = cart.value.find(p => p.id === product.id)
-
-  if (existing) {
-    existing.quantity++
-  } else {
-    cart.value.push({
-      ...product,
-      quantity: 1
-    })
+  if (savedCart) {
+    cart.value = JSON.parse(savedCart)
   }
-
-}
-
-function removeFromCart(id: number) {
-  cart.value = cart.value.filter(item => item.id !== id)
-}
-const cartTotal = computed(() => {
-  return cart.value.reduce((total, item) => {
-    return total + item.price * item.quantity
-  }, 0)
-  
 })
-watch(cart, (newCart) => {
-  localStorage.setItem('cart', JSON.stringify(newCart))
-}, { deep: true })
-
-function increaseQty(id: number) {
-  const item = cart.value.find(i => i.id === id)
-  if (item) item.quantity++
-}
-
-function decreaseQty(id: number) {
-  const item = cart.value.find(i => i.id === id)
-  if (item && item.quantity > 1) {
-    item.quantity--
-  }
-}
-
-
 </script>
 
-
 <style>
-/* CART SLIDE */
-.slide-enter-from {
-  transform: translateX(100%);
-}
-.slide-enter-to {
-  transform: translateX(0);
-}
-.slide-leave-from {
-  transform: translateX(0);
-}
+.slide-enter-from,
 .slide-leave-to {
   transform: translateX(100%);
 }
+
 .slide-enter-active,
 .slide-leave-active {
   transition: transform 0.3s ease;
 }
 
-/* MODAL FADE + SCALE */
-.fade-enter-from {
-  opacity: 0;
-  transform: scale(0.9);
-}
-.fade-enter-to {
-  opacity: 1;
-  transform: scale(1);
-}
-.fade-leave-from {
-  opacity: 1;
-  transform: scale(1);
-}
+.fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-  transform: scale(0.9);
-}
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.3s ease;
+  transform: scale(0.96);
 }
 
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.25s ease;
+}
 </style>

@@ -1,61 +1,49 @@
 <script setup lang="ts">
-import type { Product, CartItem } from '../types/Product'
+import type { Product } from '../types/Product'
 
 const props = defineProps<{
   product: Product
-  cart: CartItem[]
 }>()
 
-const emit = defineEmits(['add-to-cart', 'view-product'])
+const emit = defineEmits<{
+  (e: 'view-product', product: Product): void
+}>()
 </script>
 
 <template>
-  <div
-    class="border rounded p-4 shadow cursor-pointer hover:scale-105 transition duration-300"
-    @click="emit('view-product', props.product)"
+  <article
+    class="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg"
   >
+    <div class="mb-4 overflow-hidden rounded-xl bg-slate-100">
+      <img
+        :src="props.product.thumbnail"
+        :alt="props.product.title"
+        class="h-36 w-full object-cover sm:h-44"
+      />
+    </div>
 
-    <img
-      :src="props.product.thumbnail"
-      class="h-40 w-full object-contain mb-3"
-    />
-
-    <h2 class="font-semibold text-lg mb-2">
+    <h3 class="mb-1 line-clamp-2 text-lg font-semibold text-slate-900">
       {{ props.product.title }}
-    </h2>
+    </h3>
 
-    <p class="text-gray-500 text-sm mb-2">
+    <p class="mb-2 text-sm text-slate-500 capitalize">
       {{ props.product.category }}
     </p>
 
-    <p class="font-bold text-blue-600 mb-3">
+    <p class="mb-2 text-2xl font-semibold text-slate-900">
       ${{ props.product.price }}
     </p>
 
-    <div class="flex items-center mb-2">
-
-  <span class="text-yellow-400 text-lg">
-    {{ '★'.repeat(Math.round(product.rating)) }}
-  </span>
-
-  <span class="text-gray-400 text-lg">
-    {{ '☆'.repeat(5 - Math.round(product.rating)) }}
-  </span>
-
-  <span class="text-sm text-gray-500 ml-2">
-    ({{ product.rating }})
-  </span>
-
-</div>
+    <div class="mb-4 flex items-center gap-2 text-sm text-slate-500">
+      <span class="text-amber-400">★</span>
+      <span>{{ props.product.rating.toFixed(1) }}</span>
+    </div>
 
     <button
-      @click.stop="emit('add-to-cart', props.product)"
-      :disabled="props.cart.some(p => p.id === props.product.id)"
-      class="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50"
+      @click="emit('view-product', props.product)"
+      class="inline-flex h-10 items-center justify-center rounded-xl bg-indigo-600 px-4 text-sm font-medium text-white transition hover:bg-indigo-700"
     >
-      Add to Cart
+      View Details
     </button>
-
-  </div>
+  </article>
 </template>
-
