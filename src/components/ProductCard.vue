@@ -16,7 +16,7 @@ const emit = defineEmits(['add-to-cart', 'view-product'])
   >
 
     <img
-      :src="props.product.image"
+      :src="props.product.thumbnail"
       class="h-40 w-full object-contain mb-3"
     />
 

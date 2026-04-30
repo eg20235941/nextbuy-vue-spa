@@ -42,12 +42,28 @@
 
       <!-- Category Buttons -->
       <div class="flex gap-2 mb-4 flex-wrap">
-        <button @click="selectedCategory = 'all'" class="px-3 py-1 bg-gray-200 rounded">All</button>
-        <button @click="selectedCategory = 'smartphones'" class="px-3 py-1 bg-gray-200 rounded">Electronics</button>
-        <button @click="selectedCategory = 'laptops'" class="px-3 py-1 bg-gray-200 rounded">Jewelery</button>
-        <button @click="selectedCategory = 'fragrances'" class="px-3 py-1 bg-gray-200 rounded">Men's</button>
-        <button @click="selectedCategory = 'skincare'" class="px-3 py-1 bg-gray-200 rounded">Women's</button>
-      </div>
+
+  <button @click="selectedCategory = 'all'" class="px-3 py-1 bg-gray-200 rounded">
+    All
+  </button>
+
+  <button @click="selectedCategory = 'beauty'" class="px-3 py-1 bg-gray-200 rounded">
+    Engine Parts
+  </button>
+
+  <button @click="selectedCategory = 'fragrances'" class="px-3 py-1 bg-gray-200 rounded">
+    Electrical
+  </button>
+
+  <button @click="selectedCategory = 'furniture'" class="px-3 py-1 bg-gray-200 rounded">
+    Body Parts
+  </button>
+
+  <button @click="selectedCategory = 'groceries'" class="px-3 py-1 bg-gray-200 rounded">
+    Accessories
+  </button>
+
+</div>
 
       <!-- Product Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
