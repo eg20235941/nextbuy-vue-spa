@@ -5,7 +5,12 @@
     isDarkMode ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'
   ]"
 >
-    <header class="border-b border-slate-200 bg-white">
+    <header
+  :class="[
+    'border-b transition-colors',
+    isDarkMode ? 'border-slate-800 bg-slate-900' : 'border-slate-200 bg-white'
+  ]"
+>
       <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <h1 class="text-2xl font-semibold">NextBuy</h1>
 
@@ -57,18 +62,29 @@
 </p>
       </section>
 
-      <section class="mb-10 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+      <section
+  :class="[
+    'mb-10 rounded-2xl border p-4 shadow-sm transition-colors',
+    isDarkMode ? 'border-slate-800 bg-slate-900' : 'border-slate-200 bg-white'
+  ]"
+>
   <div class="flex flex-col gap-4 md:flex-row md:items-center">
     <input
       v-model="searchQuery"
       type="text"
       placeholder="Search products..."
-      class="h-12 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm outline-none transition focus:border-indigo-500 focus:bg-white"
+    :class="[
+  'h-12 w-full rounded-xl border px-4 text-sm outline-none transition focus:border-indigo-500',
+  isDarkMode ? 'border-slate-700 bg-slate-800 text-slate-100 placeholder:text-slate-400' : 'border-slate-200 bg-slate-50 text-slate-900'
+]"
     />
 
     <select
       v-model="selectedCategory"
-      class="h-12 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm capitalize outline-none transition focus:border-indigo-500 focus:bg-white md:w-64"
+      :class="[
+  'h-12 w-full rounded-xl border px-4 text-sm capitalize outline-none transition focus:border-indigo-500 md:w-64',
+  isDarkMode ? 'border-slate-700 bg-slate-800 text-slate-100' : 'border-slate-200 bg-slate-50 text-slate-900'
+]"
     >
       <option value="all">All Categories</option>
       <option v-for="category in categories" :key="category" :value="category">
@@ -98,37 +114,55 @@
           </button>
         </div>
 
-        <div v-if="isLoading" class="rounded-2xl border border-slate-200 bg-white p-10 text-center text-slate-500 shadow-sm">
-          Loading products...
-        </div>
+        <div
+  v-if="isLoading"
+  :class="[
+    'rounded-2xl border p-10 text-center shadow-sm transition-colors',
+    isDarkMode ? 'border-slate-800 bg-slate-900 text-slate-400' : 'border-slate-200 bg-white text-slate-500'
+  ]"
+>
+  Loading products...
+</div>
 
-        <div v-else-if="error" class="rounded-2xl border border-rose-200 bg-rose-50 p-10 text-center text-rose-600">
-          {{ error }}
-        </div>
+<div
+  v-else-if="error"
+  class="rounded-2xl border border-rose-200 bg-rose-50 p-10 text-center text-rose-600"
+>
+  {{ error }}
+</div>
 
-        <template v-else>
-          <div v-if="visibleProducts.length" class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4">
-            <ProductCard
-              v-for="product in visibleProducts"
-              :key="product.id"
-              :product="product"
-              @view-product="openProduct"
-            />
-          </div>
+<template v-else>
+  <div
+    v-if="visibleProducts.length"
+    class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4"
+  >
+    <ProductCard
+      v-for="product in visibleProducts"
+      :key="product.id"
+      :product="product"
+      @view-product="openProduct"
+    />
+  </div>
 
-          <div v-else class="rounded-2xl border border-slate-200 bg-white p-10 text-center text-slate-500 shadow-sm">
-            No matching products found.
-          </div>
+  <div
+    v-else
+    :class="[
+      'rounded-2xl border p-10 text-center shadow-sm transition-colors',
+      isDarkMode ? 'border-slate-800 bg-slate-900 text-slate-400' : 'border-slate-200 bg-white text-slate-500'
+    ]"
+  >
+    No matching products found.
+  </div>
 
-          <div class="mt-8 flex justify-center" v-if="canLoadMore">
-            <button
-              @click="loadMore"
-              class="inline-flex h-11 items-center justify-center rounded-xl bg-indigo-600 px-5 text-sm font-medium text-white transition hover:bg-indigo-700 hover:shadow-md"
-            >
-              Load More
-            </button>
-          </div>
-        </template>
+  <div v-if="canLoadMore" class="mt-8 flex justify-center">
+    <button
+      @click="loadMore"
+      class="inline-flex h-11 items-center justify-center rounded-xl bg-indigo-600 px-5 text-sm font-medium text-white transition hover:bg-indigo-700 hover:shadow-md"
+    >
+      Load More
+    </button>
+  </div>
+</template>
       </section>
     </main>
 
