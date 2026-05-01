@@ -3,6 +3,7 @@ import type { Product } from '../types/Product'
 
 const props = defineProps<{
   product: Product
+  isDarkMode: boolean
 }>()
 
 const emit = defineEmits<{
@@ -12,7 +13,10 @@ const emit = defineEmits<{
 
 <template>
   <article
-  class="group rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl cursor-pointer"
+  :class="[
+    'group rounded-2xl border p-4 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl cursor-pointer',
+    props.isDarkMode ? 'border-slate-800 bg-slate-900' : 'border-slate-200 bg-white'
+  ]"
 >
     <div class="h-36 w-full object-cover sm:h-44 transition duration-300 group-hover:scale-105">
       <img
@@ -22,15 +26,30 @@ const emit = defineEmits<{
       />
     </div>
 
-    <h3 class="mb-1 line-clamp-2 text-lg font-semibold text-slate-900">
+    <h3
+  :class="[
+    'mb-1 line-clamp-2 text-lg font-semibold',
+    props.isDarkMode ? 'text-slate-100' : 'text-slate-900'
+  ]"
+>
       {{ props.product.title }}
     </h3>
 
-    <p class="mb-2 text-sm text-slate-500 capitalize">
+    <p
+  :class="[
+    'mb-2 text-sm capitalize',
+    props.isDarkMode ? 'text-slate-400' : 'text-slate-500'
+  ]"
+>
       {{ props.product.category }}
     </p>
 
-    <p class="mb-2 text-2xl font-semibold text-slate-900">
+    <p
+  :class="[
+    'mb-2 text-2xl font-semibold',
+    props.isDarkMode ? 'text-slate-100' : 'text-slate-900'
+  ]"
+>
       ${{ props.product.price }}
     </p>
 

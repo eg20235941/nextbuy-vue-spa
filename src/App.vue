@@ -137,11 +137,12 @@
     class="grid grid-cols-1 gap-6 sm:grid-cols-2 xl:grid-cols-4"
   >
     <ProductCard
-      v-for="product in visibleProducts"
-      :key="product.id"
-      :product="product"
-      @view-product="openProduct"
-    />
+  v-for="product in visibleProducts"
+  :key="product.id"
+  :product="product"
+  :isDarkMode="isDarkMode"
+  @view-product="openProduct"
+/>
   </div>
 
   <div
@@ -166,7 +167,13 @@
       </section>
     </main>
 
-    <footer id="footer" class="border-t border-slate-200 bg-white">
+    <footer
+  id="footer"
+  :class="[
+    'border-t transition-colors',
+    isDarkMode ? 'border-slate-800 bg-slate-900' : 'border-slate-200 bg-white'
+  ]"
+>
       <div class="mx-auto max-w-6xl px-4 py-6 text-center text-sm text-slate-500 sm:px-6 lg:px-8">
         © 2026 NextBuy. All rights reserved.
       </div>
@@ -175,16 +182,30 @@
     <transition name="slide">
       <aside
         v-if="showCart"
-        class="fixed inset-y-0 right-0 z-40 w-full max-w-md border-l border-slate-200 bg-white shadow-2xl"
+        :class="[
+  'fixed inset-y-0 right-0 z-40 w-full max-w-md border-l shadow-2xl transition-colors',
+  isDarkMode ? 'border-slate-800 bg-slate-900 text-slate-100' : 'border-slate-200 bg-white text-slate-900'
+]"
       >
         <div class="flex h-full flex-col">
-          <div class="flex items-center justify-between border-b border-slate-200 px-5 py-4">
+          <div
+  :class="[
+    'flex items-center justify-between border-b px-5 py-4',
+    isDarkMode ? 'border-slate-800' : 'border-slate-200'
+  ]"
+>
             <h2 class="text-xl font-semibold">Your Cart</h2>
             <button @click="showCart = false" class="text-2xl leading-none text-slate-400 hover:text-slate-600">×</button>
           </div>
 
           <div class="flex-1 overflow-y-auto px-5 py-4">
-            <div v-if="cart.length === 0" class="rounded-2xl border border-dashed border-slate-200 p-8 text-center text-slate-500">
+            <div
+  v-if="cart.length === 0"
+  :class="[
+    'rounded-2xl border border-dashed p-8 text-center',
+    isDarkMode ? 'border-slate-700 text-slate-400' : 'border-slate-200 text-slate-500'
+  ]"
+>
               🛒 Your cart is empty
             </div>
 
@@ -192,7 +213,10 @@
               <div
                 v-for="item in cart"
                 :key="item.id"
-                class="rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                :class="[
+  'rounded-2xl border p-4 transition-colors',
+  isDarkMode ? 'border-slate-700 bg-slate-800' : 'border-slate-200 bg-slate-50'
+]"
               >
                 <div class="flex items-start justify-between gap-4">
                   <div>
@@ -217,7 +241,12 @@
             </div>
           </div>
 
-          <div class="border-t border-slate-200 px-5 py-4">
+          <div
+  :class="[
+    'border-t px-5 py-4',
+    isDarkMode ? 'border-slate-800' : 'border-slate-200'
+  ]"
+>
             <div class="mb-4 flex items-center justify-between text-lg font-semibold">
               <span>Total</span>
               <span>${{ cartTotal.toFixed(2) }}</span>
@@ -240,7 +269,12 @@
         @click.self="selectedProduct = null"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-8"
       >
-        <div class="relative w-full max-w-5xl rounded-[24px] bg-white p-5 shadow-2xl sm:p-8">
+        <div
+  :class="[
+    'relative w-full max-w-5xl rounded-[24px] p-5 shadow-2xl sm:p-8',
+    isDarkMode ? 'bg-slate-900 text-slate-100' : 'bg-white text-slate-900'
+  ]"
+>
           <button
             @click="selectedProduct = null"
             class="absolute right-5 top-4 text-2xl leading-none text-slate-300 transition hover:text-slate-500"
@@ -249,7 +283,12 @@
           </button>
 
           <div class="grid gap-8 md:grid-cols-[340px_minmax(0,1fr)] md:items-start">
-            <div class="overflow-hidden rounded-2xl border border-slate-200 bg-slate-100">
+            <div
+  :class="[
+    'overflow-hidden rounded-2xl border',
+    isDarkMode ? 'border-slate-700 bg-slate-800' : 'border-slate-200 bg-slate-100'
+  ]"
+>
               <img
                 :src="selectedProduct.images?.[0] || selectedProduct.thumbnail"
                 :alt="selectedProduct.title"
@@ -258,24 +297,39 @@
             </div>
 
             <div>
-              <h3 class="mb-3 text-3xl font-semibold tracking-tight text-slate-900">
-                {{ selectedProduct.title }}
-              </h3>
+              <h3
+  :class="[
+    'mb-3 text-3xl font-semibold tracking-tight',
+    isDarkMode ? 'text-slate-100' : 'text-slate-900'
+  ]"
+>
+  {{ selectedProduct.title }}
+</h3>
 
               <span class="inline-flex rounded-xl bg-slate-100 px-3 py-1 text-sm font-medium capitalize text-slate-700">
                 {{ selectedProduct.category }}
               </span>
 
-              <p class="mt-6 text-4xl font-semibold text-slate-900">
-                ${{ selectedProduct.price }}
-              </p>
+              <p
+  :class="[
+    'mt-6 text-4xl font-semibold',
+    isDarkMode ? 'text-slate-100' : 'text-slate-900'
+  ]"
+>
+  ${{ selectedProduct.price }}
+</p>
 
               <div class="mt-5 flex items-center gap-2 text-base text-slate-500">
                 <span class="text-amber-400">★</span>
                 <span>{{ selectedProduct.rating.toFixed(1) }}</span>
               </div>
 
-              <p class="mt-6 max-w-xl text-base leading-7 text-slate-500">
+              <p
+  :class="[
+    'mt-6 max-w-xl text-base leading-7',
+    isDarkMode ? 'text-slate-300' : 'text-slate-500'
+  ]"
+>
                 {{ selectedProduct.description }}
               </p>
 
