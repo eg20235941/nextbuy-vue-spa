@@ -41,7 +41,7 @@ const emit = defineEmits<{
 
     <button
   @click.stop="emit('view-product', props.product)"
-      class="inline-flex h-10 items-center justify-center rounded-xl bg-indigo-600 px-4 text-sm font-medium text-white transition hover:bg-indigo-700"
+      class="inline-flex h-10 items-center justify-center rounded-xl bg-indigo-600 px-4 text-sm font-medium text-white transition hover:bg-indigo-700 hover:shadow-md"
     >
       View Details
     </button>

@@ -1,5 +1,10 @@
 <template>
-  <div class="min-h-screen bg-slate-50 text-slate-900">
+  <div
+  :class="[
+    'min-h-screen transition-colors',
+    isDarkMode ? 'bg-slate-950 text-slate-100' : 'bg-slate-50 text-slate-900'
+  ]"
+>
     <header class="border-b border-slate-200 bg-white">
       <div class="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <h1 class="text-2xl font-semibold">NextBuy</h1>
@@ -11,6 +16,12 @@
             <a href="#footer" class="transition hover:text-slate-900">About</a>
           </nav>
 
+          <button
+  @click="toggleDarkMode"
+  class="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50"
+>
+  {{ isDarkMode ? 'Light' : 'Dark' }}
+</button>
           <button
             @click="showCart = true"
             class="hidden rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 md:inline-flex"
@@ -41,9 +52,9 @@
         <h2 class="mb-3 text-3xl font-semibold tracking-tight sm:text-4xl">
           Discover Your Next Buy
         </h2>
-        <p class="max-w-2xl text-sm text-slate-500 sm:text-base">
-          Browse products, search instantly, and explore details in a modern shopping experience.
-        </p>
+        <p class="mt-2 text-sm text-slate-500">
+  Browse, search, and explore products easily with a modern shopping experience.
+</p>
       </section>
 
       <section class="mb-10 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
@@ -112,7 +123,7 @@
           <div class="mt-8 flex justify-center" v-if="canLoadMore">
             <button
               @click="loadMore"
-              class="inline-flex h-11 items-center justify-center rounded-xl bg-indigo-600 px-5 text-sm font-medium text-white transition hover:bg-indigo-700"
+              class="inline-flex h-11 items-center justify-center rounded-xl bg-indigo-600 px-5 text-sm font-medium text-white transition hover:bg-indigo-700 hover:shadow-md"
             >
               Load More
             </button>
@@ -270,6 +281,7 @@ const selectedCategory = ref('all')
 const selectedProduct = ref<Product | null>(null)
 const showCart = ref(false)
 const displayLimit = ref(8)
+const isDarkMode = ref(false)
 
 const categories = computed(() => {
   return [...new Set(products.value.map((product) => product.category))].sort()
@@ -372,6 +384,11 @@ function clearCart() {
   cart.value = []
 }
 
+function toggleDarkMode() {
+  isDarkMode.value = !isDarkMode.value
+  localStorage.setItem('darkMode', JSON.stringify(isDarkMode.value))
+}
+
 watch([searchQuery, selectedCategory], () => {
   displayLimit.value = 8
 })
@@ -402,6 +419,10 @@ onMounted(async () => {
   if (savedCart) {
     cart.value = JSON.parse(savedCart)
   }
+  const savedDarkMode = localStorage.getItem('darkMode')
+if (savedDarkMode) {
+  isDarkMode.value = JSON.parse(savedDarkMode)
+}
 })
 </script>
 
